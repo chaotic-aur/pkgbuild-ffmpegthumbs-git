@@ -13,10 +13,18 @@ source=("git+https://invent.kde.org/multimedia/ffmpegthumbs")
 license=('GPL')
 md5sums=('SKIP')
 
+#pkgver() {
+#  cd ${pkgname%-git}
+#  _ver="$(grep -m1 'set(PROJECT_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
+#  echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+#}
+
 pkgver() {
   cd ${pkgname%-git}
-  _ver="$(grep -m1 'set(PROJECT_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
-  echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+  _major_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MAJOR' CMakeLists.txt | cut -d '"' -f2)"
+  _minor_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MINOR' CMakeLists.txt | cut -d '"' -f2)"
+  _patch_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MICRO' CMakeLists.txt | cut -d '"' -f2)"
+  echo "${_major_ver}.${_minor_ver}.${_patch_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
 prepare() {
