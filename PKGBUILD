@@ -19,12 +19,18 @@ md5sums=('SKIP')
 #  echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 #}
 
+#pkgver() {
+#  cd ${pkgname%-git}
+#  _major_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MAJOR' CMakeLists.txt | cut -d '"' -f2)"
+#  _minor_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MINOR' CMakeLists.txt | cut -d '"' -f2)"
+#  _patch_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MICRO' CMakeLists.txt | cut -d '"' -f2)"
+#  echo "${_major_ver}.${_minor_ver}.${_patch_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+#}
+
 pkgver() {
-  cd ${pkgname%-git}
-  _major_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MAJOR' CMakeLists.txt | cut -d '"' -f2)"
-  _minor_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MINOR' CMakeLists.txt | cut -d '"' -f2)"
-  _patch_ver="$(grep -m1 'set.*(.*RELEASE_SERVICE_VERSION_MICRO' CMakeLists.txt | cut -d '"' -f2)"
-  echo "${_major_ver}.${_minor_ver}.${_patch_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+  cd ${srcdir}/${pkgname%-git}
+  _ver="$(cat CMakeLists.txt | grep RELEASE_SERVICE_VERSION | cut -d '"' -f2 | tr '\n' '.' | cut -d "." -f 1-3)"
+  echo "$(echo ${_ver}).r$(git rev-list --count HEAD)"
 }
 
 prepare() {
